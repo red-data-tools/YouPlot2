@@ -41,7 +41,7 @@ module YouPlot2
     private BANNER = <<-BANNER
 
       Program: YouPlot2 (Tools for plotting on the terminal)
-      Version: #{YouPlot2::VERSION}
+      Version: #{VERSION}
       Source:  https://github.com/red-data-tools/YouPlot2
 
       Usage:   uplot <command> [options] <in.tsv>
@@ -80,7 +80,7 @@ module YouPlot2
       end
 
       @opt.on("--version", "print version") do
-        puts YouPlot2::VERSION
+        puts "YouPlot2 #{VERSION}"
         exit
       end
 
