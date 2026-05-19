@@ -2,5 +2,5 @@ version: 2.0
 shards:
   unicode_plot:
     git: https://github.com/crystal-data/unicode_plot.cr.git
-    version: 0.1.0+git.commit.312f8c81ee4cc829957660ee4ca721ef0907bd75
+    version: 0.1.0+git.commit.1bed7b7b648703940d838dd6f9107180c7d306de
 
