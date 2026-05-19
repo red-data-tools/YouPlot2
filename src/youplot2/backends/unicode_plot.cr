@@ -203,24 +203,38 @@ module YouPlot2
       # -----------------------------------------------------------------------
       # String → Symbol helpers (runtime conversion via case/when)
       # -----------------------------------------------------------------------
+      private alias BarValues = Array(Float64) | Array(Int64)
+
       private def prepare_bar_data(series : Array(Array(String?)),
                                    headers : Array(String)?,
                                    fmt : String?,
-                                   params : Parameters) : {Array(String), Array(Float64)}
+                                   params : Parameters) : {Array(String), BarValues}
         validate_yx_format(fmt, "barplot")
         if series.size == 1
           params.title ||= headers[0] if headers
           labels = (1..series[0].size).map(&.to_s)
-          values = series[0].map { |v| to_f64_or_zero(v) }
+          values = parse_bar_values(series[0])
         else
           require_series_count(series, 2, "barplot")
           x_col, y_col = fmt == "yx" ? {1, 0} : {0, 1}
           params.title ||= headers[y_col] if headers
           labels = series[x_col].map { |v| v || "" }
-          values = series[y_col].map { |v| to_f64_or_zero(v) }
+          values = parse_bar_values(series[y_col])
         end
         require_values(values, "barplot")
         {labels, values}
+      end
+
+      private def parse_bar_values(raw_values : Array(String?)) : BarValues
+        if raw_values.all? { |v| integer_literal?(v) }
+          raw_values.map { |v| v.to_s.to_i64 }
+        else
+          raw_values.map { |v| to_f64_or_zero(v) }
+        end
+      end
+
+      private def integer_literal?(value : String?) : Bool
+        value.to_s.strip.matches?(/\A[+-]?\d+\z/)
       end
 
       private def line_single(data : Data, params : Parameters) : ::UnicodePlot::Plot
@@ -499,6 +513,10 @@ module YouPlot2
       end
 
       private def require_values(values : Array(Float64), label : String) : Nil
+        raise DataError.new("#{label} has no data values") if values.empty?
+      end
+
+      private def require_values(values : Array(Int64), label : String) : Nil
         raise DataError.new("#{label} has no data values") if values.empty?
       end
 
