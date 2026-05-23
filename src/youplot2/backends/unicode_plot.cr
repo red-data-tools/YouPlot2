@@ -227,7 +227,7 @@ module YouPlot2
 
       private def parse_bar_values(raw_values : Array(String?)) : BarValues
         if raw_values.all? { |v| integer_literal?(v) }
-          raw_values.map { |v| v.to_s.to_i64 }
+          raw_values.map(&.to_s.to_i64)
         else
           raw_values.map { |v| to_f64_or_zero(v) }
         end

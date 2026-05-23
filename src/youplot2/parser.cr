@@ -90,26 +90,14 @@ module YouPlot2
     end
 
     private def add_common_options(opt : OptionParser)
-      opt.on("-O", "--pass",
-        "pass input to stdout for pipeline use") do
-        @options.pass = STDOUT
-        @options.pass_path = nil
-      end
-      opt.on("--pass FILE",
-        "pass input to FILE for pipeline use") do |v|
-        @options.pass = nil
-        @options.pass_path = v
+      opt.on("-O [FILE]", "--pass [FILE]",
+        "pass input to stdout or FILE for pipeline use") do |v|
+        set_pass_target(v)
       end
 
-      opt.on("-o", "--output",
-        "write plot to stdout") do
-        @options.output = STDOUT
-        @options.output_path = nil
-      end
-      opt.on("--output FILE",
-        "write plot to FILE (default: stderr)") do |v|
-        @options.output = STDERR
-        @options.output_path = v
+      opt.on("-o [FILE]", "--output [FILE]",
+        "write plot to stdout or FILE (default: stderr)") do |v|
+        set_output_target(v)
       end
 
       opt.on("-d", "--delimiter DELIM",
@@ -170,6 +158,26 @@ module YouPlot2
 
       opt.on("--debug", "print preprocessed data") do
         @options.debug = true
+      end
+    end
+
+    private def set_pass_target(value : String) : Nil
+      if value.empty? || value == "-"
+        @options.pass = STDOUT
+        @options.pass_path = nil
+      else
+        @options.pass = nil
+        @options.pass_path = value
+      end
+    end
+
+    private def set_output_target(value : String) : Nil
+      if value.empty? || value == "-"
+        @options.output = STDOUT
+        @options.output_path = nil
+      else
+        @options.output = STDERR
+        @options.output_path = value
       end
     end
 

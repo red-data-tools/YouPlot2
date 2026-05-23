@@ -70,4 +70,54 @@ describe YouPlot2::Parser do
       File.delete(pass_path) if File.exists?(pass_path)
     end
   end
+
+  it "treats hyphen output targets as stdout" do
+    argv = ["line", "-o", "-", "-O", "-", "-w", "17"]
+
+    params = YouPlot2::Parameters.new
+    options = YouPlot2::Options.new
+    parser = YouPlot2::Parser.new(argv, params, options)
+
+    parser.parse
+
+    options.output.object_id.should eq(STDOUT.object_id)
+    options.output_path.should be_nil
+    options.pass.try(&.object_id).should eq(STDOUT.object_id)
+    options.pass_path.should be_nil
+    params.width.should eq(17)
+    parser.input_files.should eq([] of String)
+  end
+
+  it "treats long hyphen output targets as stdout" do
+    argv = ["line", "--output", "-", "--pass", "-", "-w", "17"]
+
+    params = YouPlot2::Parameters.new
+    options = YouPlot2::Options.new
+    parser = YouPlot2::Parser.new(argv, params, options)
+
+    parser.parse
+
+    options.output.object_id.should eq(STDOUT.object_id)
+    options.output_path.should be_nil
+    options.pass.try(&.object_id).should eq(STDOUT.object_id)
+    options.pass_path.should be_nil
+    params.width.should eq(17)
+    parser.input_files.should eq([] of String)
+  end
+
+  it "keeps file output targets as paths" do
+    argv = ["line", "-o", "plot.txt", "-O", "data.tsv", "input.csv"]
+
+    params = YouPlot2::Parameters.new
+    options = YouPlot2::Options.new
+    parser = YouPlot2::Parser.new(argv, params, options)
+
+    parser.parse
+
+    options.output.object_id.should eq(STDERR.object_id)
+    options.output_path.should eq("plot.txt")
+    options.pass.should be_nil
+    options.pass_path.should eq("data.tsv")
+    parser.input_files.should eq(["input.csv"])
+  end
 end
