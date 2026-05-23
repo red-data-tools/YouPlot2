@@ -5,14 +5,21 @@ require "../ext/option_parser"
 
 module YouPlot2
   class Parser
+    private alias OptionRegistrar = Proc(OptionParser, Nil)
+
     getter command : String?
     getter input_files : Array(String)
+
+    @command_help : String?
+    @executable_name : String
 
     def initialize(@argv : Array(String),
                    @params : Parameters,
                    @options : Options)
       @opt = OptionParser.new
+      @executable_name = Path[PROGRAM_NAME].basename.to_s
       @command = nil
+      @command_help = nil
       @input_files = [] of String
 
       setup
@@ -34,17 +41,18 @@ module YouPlot2
     end
 
     def show_main_help(io : IO = STDOUT)
-      io.puts BANNER
+      io.puts main_help
     end
 
     # -----------------------------------------------------------------------
-    private BANNER = <<-BANNER
+    private def main_help : String
+      <<-BANNER
 
       Program: YouPlot2 (Tools for plotting on the terminal)
       Version: #{VERSION}
       Source:  https://github.com/red-data-tools/YouPlot2
 
-      Usage:   uplot <command> [options] <in.tsv>
+      Usage:   #{@executable_name} <command> [options] <in.tsv>
 
       Commands:
           barplot    bar           draw a horizontal barplot
@@ -62,27 +70,17 @@ module YouPlot2
           --version                print the version of YouPlot2
       \n
       BANNER
+    end
 
     private def setup
-      @opt.banner = BANNER
+      @opt.banner = main_help
       @opt.summary_width = 23
 
       add_common_options(@opt)
       add_subcommands
 
-      @opt.on("--help", "print help") do
-        if @command
-          puts @opt
-        else
-          show_main_help
-        end
-        exit
-      end
-
-      @opt.on("--version", "print version") do
-        puts "YouPlot2 #{VERSION}"
-        exit
-      end
+      add_help_option(@opt)
+      add_version_option(@opt)
 
       @opt.unknown_args do |args, _|
         @input_files = args.dup
@@ -90,12 +88,12 @@ module YouPlot2
     end
 
     private def add_common_options(opt : OptionParser)
-      opt.on("-O [FILE]", "--pass [FILE]",
+      opt.on("-O", "--pass [FILE]",
         "pass input to stdout or FILE for pipeline use") do |v|
         set_pass_target(v)
       end
 
-      opt.on("-o [FILE]", "--output [FILE]",
+      opt.on("-o", "--output [FILE]",
         "write plot to stdout or FILE (default: stderr)") do |v|
         set_output_target(v)
       end
@@ -193,116 +191,141 @@ module YouPlot2
       add_colors_commands
     end
 
-    private def set_sub_banner(cmd : String)
+    private def set_subcommand(cmd : String, options : OptionRegistrar)
       @command = cmd
-      @opt.banner = "\nUsage: uplot #{cmd} [options] <in.tsv>\n\nOptions for #{cmd}:\n"
+      @opt.banner = "\nUsage: #{@executable_name} #{cmd} [options] <in.tsv>\n\nOptions for #{cmd}:"
+      @command_help = help_for_command(cmd, options)
+      options.call(@opt)
+    end
+
+    private def help_for_command(cmd : String, options : OptionRegistrar) : String
+      "\nUsage: #{@executable_name} #{cmd} [options] <in.tsv>\n\n" \
+      "Options for #{cmd}:\n" \
+      "#{options_help(options)}\n\n" \
+      "Common options:\n" \
+      "#{common_options_help}"
+    end
+
+    private def options_help(options : OptionRegistrar) : String
+      help = OptionParser.new
+      help.summary_width = 23
+      options.call(help)
+      help.to_s
+    end
+
+    private def common_options_help : String
+      help = OptionParser.new
+      help.summary_width = 23
+      add_common_options(help)
+      add_help_option(help)
+      add_version_option(help)
+      help.to_s
+    end
+
+    private def add_help_option(opt : OptionParser)
+      opt.on("--help", "print help") do
+        if help = @command_help
+          puts help
+        else
+          show_main_help
+        end
+        exit
+      end
+    end
+
+    private def add_version_option(opt : OptionParser)
+      opt.on("--version", "print version") do
+        puts "#{@executable_name} #{VERSION}"
+        exit
+      end
+    end
+
+    private def add_commands(names : Array(String), description : String, &options : OptionRegistrar)
+      names.each do |cmd|
+        @opt.on(cmd, description) do
+          set_subcommand(cmd, options)
+        end
+      end
     end
 
     private def add_barplot_commands
-      ["barplot", "bar"].each do |cmd|
-        @opt.on(cmd, "draw a horizontal barplot") do
-          set_sub_banner(cmd)
-          add_symbol(@opt)
-          add_fmt_yx(@opt)
-          add_xscale(@opt)
-        end
+      add_commands(["barplot", "bar"], "draw a horizontal barplot") do |opt|
+        add_symbol(opt)
+        add_fmt_yx(opt)
+        add_xscale(opt)
       end
     end
 
     private def add_count_commands
-      ["count", "c"].each do |cmd|
-        @opt.on(cmd, "draw a barplot based on occurrences") do
-          set_sub_banner(cmd)
-          @opt.on("-r", "--reverse", "reverse order") { @options.reverse = true }
-          add_symbol(@opt)
-          add_xscale(@opt)
-        end
+      add_commands(["count", "c"], "draw a barplot based on occurrences") do |opt|
+        opt.on("-r", "--reverse", "reverse order") { @options.reverse = true }
+        add_symbol(opt)
+        add_xscale(opt)
       end
     end
 
     private def add_histogram_commands
-      ["histogram", "hist"].each do |cmd|
-        @opt.on(cmd, "draw a horizontal histogram") do
-          set_sub_banner(cmd)
-          add_symbol(@opt)
-          @opt.on("--closed STR", "side of intervals to close [left]") do |v|
-            @params.closed = v
-          end
-          @opt.on("-n", "--nbins INT", "approximate number of bins") do |v|
-            @params.nbins = parse_int_option("--nbins", v, min: 1)
-          end
+      add_commands(["histogram", "hist"], "draw a horizontal histogram") do |opt|
+        add_symbol(opt)
+        opt.on("--closed STR", "side of intervals to close [left]") do |v|
+          @params.closed = v
+        end
+        opt.on("-n", "--nbins INT", "approximate number of bins") do |v|
+          @params.nbins = parse_int_option("--nbins", v, min: 1)
         end
       end
     end
 
     private def add_line_commands
-      ["lineplot", "line", "l"].each do |cmd|
-        @opt.on(cmd, "draw a line chart") do
-          set_sub_banner(cmd)
-          add_canvas(@opt)
-          add_grid(@opt)
-          add_fmt_yx(@opt)
-          add_ylim(@opt)
-          add_xlim(@opt)
-        end
+      add_commands(["lineplot", "line", "l"], "draw a line chart") do |opt|
+        add_canvas(opt)
+        add_grid(opt)
+        add_fmt_yx(opt)
+        add_ylim(opt)
+        add_xlim(opt)
       end
     end
 
     private def add_lines_commands
-      ["lineplots", "lines", "ls"].each do |cmd|
-        @opt.on(cmd, "draw a line chart with multiple series") do
-          set_sub_banner(cmd)
-          add_canvas(@opt)
-          add_grid(@opt)
-          add_fmt_xyxy(@opt)
-          add_ylim(@opt)
-          add_xlim(@opt)
-        end
+      add_commands(["lineplots", "lines", "ls"], "draw a line chart with multiple series") do |opt|
+        add_canvas(opt)
+        add_grid(opt)
+        add_fmt_xyxy(opt)
+        add_ylim(opt)
+        add_xlim(opt)
       end
     end
 
     private def add_scatter_commands
-      ["scatter", "s"].each do |cmd|
-        @opt.on(cmd, "draw a scatter plot") do
-          set_sub_banner(cmd)
-          add_canvas(@opt)
-          add_grid(@opt)
-          add_fmt_xyxy(@opt)
-          add_ylim(@opt)
-          add_xlim(@opt)
-        end
+      add_commands(["scatter", "s"], "draw a scatter plot") do |opt|
+        add_canvas(opt)
+        add_grid(opt)
+        add_fmt_xyxy(opt)
+        add_ylim(opt)
+        add_xlim(opt)
       end
     end
 
     private def add_density_commands
-      ["density", "d"].each do |cmd|
-        @opt.on(cmd, "draw a density plot") do
-          set_sub_banner(cmd)
-          add_canvas(@opt)
-          add_grid(@opt)
-          add_fmt_xyxy(@opt)
-          add_ylim(@opt)
-          add_xlim(@opt)
-        end
+      add_commands(["density", "d"], "draw a density plot") do |opt|
+        add_canvas(opt)
+        add_grid(opt)
+        add_fmt_xyxy(opt)
+        add_ylim(opt)
+        add_xlim(opt)
       end
     end
 
     private def add_boxplot_commands
-      ["boxplot", "box"].each do |cmd|
-        @opt.on(cmd, "draw a horizontal boxplot") do
-          set_sub_banner(cmd)
-          add_xlim(@opt)
-        end
+      add_commands(["boxplot", "box"], "draw a horizontal boxplot") do |opt|
+        add_xlim(opt)
       end
     end
 
     private def add_colors_commands
-      ["colors", "color", "colours", "colour"].each do |cmd|
-        @opt.on(cmd, "show the list of available colors") do
-          set_sub_banner(cmd)
-          @opt.on("-n", "--names", "show color names only") do
-            @options.color_names = true
-          end
+      add_commands(["colors", "color", "colours", "colour"], "show the list of available colors") do |opt|
+        opt.on("-n", "--names", "show color names only") do
+          @options.color_names = true
         end
       end
     end
