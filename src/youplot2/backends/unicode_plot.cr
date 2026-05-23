@@ -18,7 +18,7 @@ module YouPlot2
 
         if count
           require_series(data, 1, "count")
-          series = Processing.count_values(series[0], reverse: reverse)
+          series = YouPlot2::Aggregation.count_values(series[0], reverse: reverse)
           params.title ||= headers[0] if headers
         end
 

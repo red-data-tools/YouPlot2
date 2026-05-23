@@ -1,9 +1,9 @@
 require "./spec_helper"
 
-describe YouPlot2::Backends::Processing do
+describe YouPlot2::Aggregation do
   describe ".count_values" do
     it "uses natural sort for ties in mixed labels" do
-      labels, counts = YouPlot2::Backends::Processing.count_values([
+      labels, counts = YouPlot2::Aggregation.count_values([
         "a10", "a2", "a1",
       ])
 
@@ -12,7 +12,7 @@ describe YouPlot2::Backends::Processing do
     end
 
     it "uses numeric order for pure numeric labels" do
-      labels, counts = YouPlot2::Backends::Processing.count_values([
+      labels, counts = YouPlot2::Aggregation.count_values([
         "10", "2", "1",
       ])
 
@@ -21,7 +21,7 @@ describe YouPlot2::Backends::Processing do
     end
 
     it "supports reverse option after natural sorting" do
-      labels, _ = YouPlot2::Backends::Processing.count_values([
+      labels, _ = YouPlot2::Aggregation.count_values([
         "a10", "a2", "a1",
       ], reverse: true)
 
