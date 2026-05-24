@@ -10,7 +10,6 @@ module YouPlot2
       # -----------------------------------------------------------------------
       # barplot
       # -----------------------------------------------------------------------
-      # ameba:disable Metrics/CyclomaticComplexity
       def barplot(data : Data, params : Parameters, fmt : String? = nil,
                   count : Bool = false, reverse : Bool = false) : ::UnicodePlot::Plot
         headers = data.headers
@@ -57,7 +56,6 @@ module YouPlot2
       # -----------------------------------------------------------------------
       # histogram
       # -----------------------------------------------------------------------
-      # ameba:disable Metrics/CyclomaticComplexity
       def histogram(data : Data, params : Parameters) : ::UnicodePlot::Plot
         headers = data.headers
         series = data.series
