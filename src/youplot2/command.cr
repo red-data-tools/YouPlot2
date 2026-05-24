@@ -42,15 +42,10 @@ module YouPlot2
         return
       end
 
-      # Read from files given on the command line, or from stdin
-      if input_files.empty?
-        process_input(STDIN.gets_to_end, cmd)
-      else
-        input_files.each do |path|
-          content = read_input_file(path)
-          process_input(content, cmd)
-        end
-      end
+      # Read from files given on the command line, or from stdin.
+      # Multiple files are treated as one continuous stream for a single plot.
+      input = read_all_input(input_files)
+      process_input(input, cmd)
     ensure
       finalize_streams
     end
@@ -302,6 +297,16 @@ module YouPlot2
       File.read(path)
     rescue ex : File::Error
       raise InputError.new("failed to read #{path.inspect}: #{ex.message}", cause: ex)
+    end
+
+    private def read_all_input(input_files : Array(String)) : String
+      return STDIN.gets_to_end if input_files.empty?
+
+      String.build do |io|
+        input_files.each do |path|
+          io << read_input_file(path)
+        end
+      end
     end
 
     private def output_data(input : String)
