@@ -3,7 +3,9 @@
 [![build](https://github.com/red-data-tools/YouPlot2/actions/workflows/build.yml/badge.svg)](https://github.com/red-data-tools/YouPlot2/actions/workflows/build.yml)
 [![Lines of Code](https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fred-data-tools%2FYouPlot2%2Flines)](https://tokei.kojix2.net/github/red-data-tools/YouPlot2)
 
-[YouPlot2](https://github.com/red-data-tools/YouPlot2) is an experimental [Crystal](https://github.com/crystal-lang/crystal) rewrite of [YouPlot](https://github.com/red-data-tools/YouPlot).
+[YouPlot2](https://github.com/red-data-tools/YouPlot2) is a [Crystal](https://github.com/crystal-lang/crystal) implementation of [YouPlot](https://github.com/red-data-tools/YouPlot).
+
+YouPlot2 supports most features of YouPlot, but it does not support configuration files.
 
 ## Installation
 
