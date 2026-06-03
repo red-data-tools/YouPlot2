@@ -1,20 +1,25 @@
 # YouPlot2
 
-[![build](https://github.com/red-data-tools/YouPlot2/actions/workflows/build.yml/badge.svg)](https://github.com/red-data-tools/YouPlot2/actions/workflows/build.yml)
-[![Lines of Code](https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fred-data-tools%2FYouPlot2%2Flines)](https://tokei.kojix2.net/github/red-data-tools/YouPlot2)
+<div align="center">
+  <img src="logo.svg" alt="YouPlot2 logo">
+  <hr>
+  <a href="https://github.com/red-data-tools/YouPlot2/actions/workflows/build.yml"><img alt="Build Status" src="https://github.com/red-data-tools/YouPlot2/actions/workflows/build.yml/badge.svg"></a>
+  <a href="https://tokei.kojix2.net/github/red-data-tools/YouPlot2"><img alt="Lines of Code" src="https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fred-data-tools%2FYouPlot2%2Flines"></a>
+  <a href="LICENSE"><img alt="The MIT License" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+  
+  <p><a href="https://github.com/red-data-tools/YouPlot2">YouPlot2</a> is a portable version of <a href="https://github.com/red-data-tools/YouPlot">YouPlot</a>.</p>
 
-[YouPlot2](https://github.com/red-data-tools/YouPlot2) is a [Crystal](https://github.com/crystal-lang/crystal) implementation of [YouPlot](https://github.com/red-data-tools/YouPlot).
-
-YouPlot2 supports most features of YouPlot, but it does not support configuration files.
+  <p>:crystal_ball: Powered by <a href="https://github.com/crystal-lang/crystal">Crystal</a></p>
+</div>
 
 ## Installation
 
 Download the binary from the [GitHub Releases](https://github.com/red-data-tools/YouPlot2/releases).
 
-- Provides prebuilt portable binaries.
-- Uses statically linked builds on Linux and Windows.
-- Provides portable precompiled executables on macOS.
-- Intended to work in environments where additional dependencies are hard to install.
+- Prebuilt portable binaries are available.
+- Linux and Windows builds are statically linked.
+- macOS builds are distributed as portable precompiled executables.
+- YouPlot2 is intended for environments where installing additional dependencies is difficult.
 
 ## Usage
 
@@ -29,5 +34,5 @@ shards build
 bin/uplot2 --version
 ```
 
-Dependent libraries:
+Dependency:
 [unicode_plot.cr](https://github.com/crystal-data/unicode_plot.cr)
