@@ -16,6 +16,5 @@ color_scheme: "default"
 features:
   - assets
   - base16
-  - books
   - pages
   - search
