@@ -35,17 +35,17 @@ jobs:
         with:
           crystal: latest
 
-      - name: Install Crystal (MinGW64)
+      - name: Install Crystal (UCRT64)
         if: matrix.target == 'x86_64-pc-windows-gnu'
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: >-
             git
-            mingw-w64-x86_64-crystal
-            mingw-w64-x86_64-shards
-            mingw-w64-x86_64-binutils
+            mingw-w64-ucrt-x86_64-crystal
+            mingw-w64-ucrt-x86_64-shards
+            mingw-w64-ucrt-x86_64-binutils
             zip
 
       - name: Set version variables
@@ -68,7 +68,7 @@ jobs:
         if: matrix.target != 'x86_64-pc-windows-gnu'
         run: shards install --without-development
 
-      - name: Install dependencies (MinGW64)
+      - name: Install dependencies (UCRT64)
         if: matrix.target == 'x86_64-pc-windows-gnu'
         shell: msys2 {0}
         run: shards install --without-development
@@ -80,7 +80,7 @@ jobs:
           ./bin/uplot2 --help
           crystal spec
 
-      - name: Run tests (MinGW64)
+      - name: Run tests (UCRT64)
         if: matrix.target == 'x86_64-pc-windows-gnu'
         shell: msys2 {0}
         run: |
@@ -171,7 +171,7 @@ jobs:
           Copy-Item "README.md" "$pkg/"
           Compress-Archive -Path "$pkg/*" -DestinationPath "$pkg.zip"
 
-      - name: Build on Windows (MinGW64)
+      - name: Build on Windows (UCRT64)
         if: matrix.target == 'x86_64-pc-windows-gnu'
         shell: msys2 {0}
         run: |
