@@ -19,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
       - name: Install Nicolino
         run: |
           wget https://github.com/ralsina/nicolino/releases/latest/download/nicolino-static-linux-amd64
