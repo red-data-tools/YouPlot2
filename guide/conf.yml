@@ -12,6 +12,8 @@ galleries: "galleries/"
 
 theme: "terminal"
 color_scheme: "default"
+theme_params:
+  accent_color: "magenta"
 
 features:
   - assets
