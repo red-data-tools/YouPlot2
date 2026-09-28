@@ -31,7 +31,7 @@ jobs:
       - name: Build manual
         working-directory: guide
         run: |
-          nicolino theme install papermod
+          nicolino theme install terminal
           nicolino build -B -p
 
       - name: Upload Pages artifact

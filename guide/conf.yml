@@ -10,7 +10,7 @@ content: "content/"
 posts: "posts/"
 galleries: "galleries/"
 
-theme: "papermod"
+theme: "terminal"
 color_scheme: "default"
 
 features:
