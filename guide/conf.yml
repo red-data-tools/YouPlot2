@@ -1,4 +1,4 @@
-title: "YouPlot2 Manual"
+title: "YouPlot2"
 description: "Installation and usage guide for YouPlot2"
 url: "https://red-data-tools.github.io"
 url_prefix: "YouPlot2"
@@ -14,4 +14,8 @@ theme: "papermod"
 color_scheme: "default"
 
 features:
+  - assets
+  - base16
   - books
+  - pages
+  - search
