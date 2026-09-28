@@ -1,4 +1,6 @@
-# Quick Start
+---
+title: Quick Start
+---
 
 Pipe CSV data to YouPlot2 to display a horizontal bar chart:
 
