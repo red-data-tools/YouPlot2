@@ -25,7 +25,7 @@ html {
   --plot-gray: #8b968c;
 }
 
-[data-theme="light"] {
+:root[data-theme="light"] {
   color-scheme: light;
   --background: #f1f5ef;
   --foreground: #1b3022;
@@ -33,6 +33,11 @@ html {
   --plot-green: #137333;
   --plot-bright-green: #15803d;
   --plot-gray: #657065;
+
+  /* The theme's shared syntax colors are too pale on a light background. */
+  .tz-s, .tz-s1 { color: var(--plot-green); }
+  .tz-m { color: #8c4c18; }
+  .tz-se { color: #795338; }
 }
 
 /* Override the theme's separate code font so text and plot glyphs agree. */
