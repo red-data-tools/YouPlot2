@@ -17,25 +17,29 @@ Select your system to install the prebuilt v0.0.6 release. The version shown her
 tar -xzf youplot2-v0.0.6-x86_64-unknown-linux-musl.tar.gz
 mkdir -p "$HOME/.local/bin"
 install -m 755 youplot2-v0.0.6-x86_64-unknown-linux-musl/uplot2 "$HOME/.local/bin/uplot2"
-"$HOME/.local/bin/uplot2" --version</pre></div>
+"$HOME/.local/bin/uplot2" --version
+rm -r youplot2-v0.0.6-x86_64-unknown-linux-musl.tar.gz youplot2-v0.0.6-x86_64-unknown-linux-musl</pre></div>
 
 <div class="install-panel install-mac-arm"><pre>curl -fLO https://github.com/red-data-tools/YouPlot2/releases/download/v0.0.6/youplot2-v0.0.6-aarch64-apple-darwin.tar.gz
 tar -xzf youplot2-v0.0.6-aarch64-apple-darwin.tar.gz
 mkdir -p "$HOME/.local/bin"
 install -m 755 youplot2-v0.0.6-aarch64-apple-darwin/uplot2 "$HOME/.local/bin/uplot2"
-"$HOME/.local/bin/uplot2" --version</pre></div>
+"$HOME/.local/bin/uplot2" --version
+rm -r youplot2-v0.0.6-aarch64-apple-darwin.tar.gz youplot2-v0.0.6-aarch64-apple-darwin</pre></div>
 
 <div class="install-panel install-mac-intel"><pre>curl -fLO https://github.com/red-data-tools/YouPlot2/releases/download/v0.0.6/youplot2-v0.0.6-x86_64-apple-darwin.tar.gz
 tar -xzf youplot2-v0.0.6-x86_64-apple-darwin.tar.gz
 mkdir -p "$HOME/.local/bin"
 install -m 755 youplot2-v0.0.6-x86_64-apple-darwin/uplot2 "$HOME/.local/bin/uplot2"
-"$HOME/.local/bin/uplot2" --version</pre></div>
+"$HOME/.local/bin/uplot2" --version
+rm -r youplot2-v0.0.6-x86_64-apple-darwin.tar.gz youplot2-v0.0.6-x86_64-apple-darwin</pre></div>
 
 <div class="install-panel install-windows"><pre>Invoke-WebRequest 'https://github.com/red-data-tools/YouPlot2/releases/download/v0.0.6/youplot2-v0.0.6-x86_64-pc-windows-msvc.zip' -OutFile 'youplot2-v0.0.6-x86_64-pc-windows-msvc.zip'
 Expand-Archive 'youplot2-v0.0.6-x86_64-pc-windows-msvc.zip' -DestinationPath 'youplot2-v0.0.6-x86_64-pc-windows-msvc' -Force
 New-Item "$HOME\bin" -ItemType Directory -Force | Out-Null
 Copy-Item 'youplot2-v0.0.6-x86_64-pc-windows-msvc\uplot2.exe' "$HOME\bin\uplot2.exe" -Force
-& "$HOME\bin\uplot2.exe" --version</pre></div>
+& "$HOME\bin\uplot2.exe" --version
+Remove-Item 'youplot2-v0.0.6-x86_64-pc-windows-msvc.zip', 'youplot2-v0.0.6-x86_64-pc-windows-msvc' -Recurse</pre></div>
 </div>
 
 Add `$HOME/.local/bin` (or `$HOME\bin` on Windows) to your `PATH` to run `uplot2` directly.
