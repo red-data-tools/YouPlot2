@@ -22,7 +22,7 @@ describe YouPlot2::Command do
       command = YouPlot2::Command.new(["line", first_path, "--", second_path])
       command.options.output = IO::Memory.new
       command.run
-      command.data.not_nil!.series[0].size.should eq(2)
+      command.data.try(&.series[0].size).should eq(2)
     ensure
       File.delete(first_path) if File.exists?(first_path)
       File.delete(second_path) if File.exists?(second_path)
@@ -37,7 +37,7 @@ describe YouPlot2::Command do
         command = YouPlot2::Command.new([kind, "-T", "-p", path])
         command.options.output = IO::Memory.new
         command.run
-        command.data.not_nil!.series.size.should eq(2)
+        command.data.try(&.series.size).should eq(2)
       end
     ensure
       File.delete(path) if File.exists?(path)
@@ -51,7 +51,7 @@ describe YouPlot2::Command do
       complete = YouPlot2::Command.new(["scatter", "-T", "-p", "--fmt", "xyxy", path])
       complete.options.output = IO::Memory.new
       complete.run
-      complete.data.not_nil!.series.size.should eq(4)
+      complete.data.try(&.series.size).should eq(4)
 
       File.write(path, "1\t2\n3\t4\n5\t6\n")
       incomplete = YouPlot2::Command.new(["scatter", "-T", "-p", "--fmt", "xyxy", path])
@@ -72,7 +72,7 @@ describe YouPlot2::Command do
       command = YouPlot2::Command.new(["bar", "-p", "-d,", "--pass", pass_path, first_path, second_path])
       command.options.output = IO::Memory.new
       command.run
-      command.data.not_nil!.series[0].should eq(["alpha\nbeta"])
+      command.data.try(&.series[0]).should eq(["alpha\nbeta"])
       File.read(pass_path).should eq("\"alpha\nbeta\",1\n")
     ensure
       [first_path, second_path, pass_path].each do |path|

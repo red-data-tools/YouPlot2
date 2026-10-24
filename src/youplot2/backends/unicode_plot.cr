@@ -321,7 +321,7 @@ module YouPlot2
           else
             to_color_sym(c, default)
           end
-        else             default
+        else default
         end
       end
 

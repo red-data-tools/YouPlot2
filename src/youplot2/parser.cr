@@ -45,28 +45,28 @@ module YouPlot2
     private def main_help : String
       <<-BANNER
 
-      Program: YouPlot2 (Tools for plotting on the terminal)
-      Version: #{VERSION}
-      Source:  https://github.com/red-data-tools/YouPlot2
+        Program: YouPlot2 (Tools for plotting on the terminal)
+        Version: #{VERSION}
+        Source:  https://github.com/red-data-tools/YouPlot2
 
-      Usage:   #{@executable_name} <command> [options] <in.tsv>
+        Usage:   #{@executable_name} <command> [options] <in.tsv>
 
-      Commands:
-          barplot    bar           draw a horizontal barplot
-          histogram  hist          draw a horizontal histogram
-          lineplot   line          draw a line chart
-          lineplots  lines         draw a line chart with multiple series
-          scatter    s             draw a scatter plot
-          density    d             draw a density plot
-          boxplot    box           draw a horizontal boxplot
-          count      c             draw a barplot based on the number of occurrences
-          colors     color         show the list of available colors
+        Commands:
+            barplot    bar           draw a horizontal barplot
+            histogram  hist          draw a horizontal histogram
+            lineplot   line          draw a line chart
+            lineplots  lines         draw a line chart with multiple series
+            scatter    s             draw a scatter plot
+            density    d             draw a density plot
+            boxplot    box           draw a horizontal boxplot
+            count      c             draw a barplot based on the number of occurrences
+            colors     color         show the list of available colors
 
-      General options:
-          --help                   print command specific help menu
-          --version                print the version of YouPlot2
-      \n
-      BANNER
+        General options:
+            --help                   print command specific help menu
+            --version                print the version of YouPlot2
+        \n
+        BANNER
     end
 
     private def setup

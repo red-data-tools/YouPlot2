@@ -20,7 +20,8 @@ module YouPlot2
     end
 
     def run
-      completed = false
+      # The ensure block needs this value when parsing or plotting fails.
+      completed = false # ameba:disable Lint/UselessAssign
       parser = Parser.new(@argv, @params, @options)
       parser.parse
 
@@ -56,7 +57,8 @@ module YouPlot2
 
     private def process_progressive_input(input_files : Array(String), cmd : String)
       previous_lines = 0
-      cursor_hidden = false
+      # The ensure block restores the cursor if an earlier operation fails.
+      cursor_hidden = false # ameba:disable Lint/UselessAssign
 
       if options.output_path
         raise UsageError.new("progressive mode cannot write plots to --output FILE")
@@ -201,7 +203,7 @@ module YouPlot2
       rows = CSV.parse(input, separator: options.delimiter)
       rows.map { |row| row.map { |value| value.as(String?) } }
     rescue ex : CSV::Error
-      return nil if !final && (ex.message || "").starts_with?("Unclosed quote")
+      return if !final && ex.message.to_s.starts_with?("Unclosed quote")
       raise DataError.new("failed to parse progressive input row: #{ex.message}", cause: ex)
     end
 
@@ -394,22 +396,20 @@ module YouPlot2
       if io = options.pass
         streams << io unless streams.any? { |stream| stream.object_id == io.object_id }
       end
-      streams.each do |io|
-        begin
-          io.flush
-        rescue ex
-          first_error ||= ex
-        ensure
-          unless io.object_id == STDOUT.object_id || io.object_id == STDERR.object_id || io.closed?
-            begin
-              io.close
-            rescue ex
-              first_error ||= ex
-            end
+      streams.each do |stream|
+        stream.flush
+      rescue ex
+        first_error ||= ex
+      ensure
+        unless stream.object_id == STDOUT.object_id || stream.object_id == STDERR.object_id || stream.closed?
+          begin
+            stream.close
+          rescue ex
+            first_error ||= ex
           end
         end
       end
-      raise first_error.not_nil! if first_error && !suppress_errors
+      raise first_error if first_error && !suppress_errors
     end
   end
 end
