@@ -6,6 +6,8 @@ on:
     paths:
       - "guide/**"
       - ".github/workflows/guide.yml"
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
@@ -18,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: main
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
@@ -27,6 +31,20 @@ jobs:
           wget https://github.com/ralsina/nicolino/releases/latest/download/nicolino-static-linux-amd64
           chmod +x nicolino-static-linux-amd64
           sudo mv nicolino-static-linux-amd64 /usr/local/bin/nicolino
+
+      - name: Set the release version in the guide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == release && "$RELEASE_PRERELEASE" == false ]]; then
+            version="$RELEASE_TAG"
+          else
+            version=$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName --jq .tagName)
+          fi
+          [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          sed -i -E "s/v[0-9]+\.[0-9]+\.[0-9]+/$version/g" guide/content/installation.md
 
       - name: Build manual
         working-directory: guide

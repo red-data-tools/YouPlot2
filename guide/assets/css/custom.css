@@ -106,6 +106,49 @@ pre.terminal-output {
   margin: 2rem 0 0;
 }
 
+.install-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+}
+
+.install-tabs input {
+  position: absolute;
+  opacity: 0;
+}
+
+.install-tabs label {
+  color: var(--accent);
+  cursor: pointer;
+  padding: .125rem .25rem;
+  text-decoration: underline;
+}
+
+.install-tabs input:checked + label {
+  color: var(--background);
+  background: var(--accent);
+  text-decoration: none;
+}
+
+.install-tabs input:focus-visible + label {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.install-panel {
+  display: none;
+  flex: 0 0 100%;
+  min-width: 0;
+  order: 1;
+}
+
+#install-linux:checked ~ .install-linux,
+#install-mac-arm:checked ~ .install-mac-arm,
+#install-mac-intel:checked ~ .install-mac-intel,
+#install-windows:checked ~ .install-windows {
+  display: block;
+}
+
 @media (max-width: 36rem) {
   .guide-nav {
     display: grid;
