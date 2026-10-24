@@ -9,6 +9,12 @@
   font-display: block;
 }
 
+/* Keep short and long pages at the same horizontal position. */
+html {
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--accent) var(--background);
+}
+
 [data-theme="dark"] {
   color-scheme: dark;
   --background: #0d1410;
@@ -77,4 +83,37 @@ pre.terminal-output {
   letter-spacing: 0;
   white-space: pre;
   word-break: normal;
+}
+
+.guide-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.guide-nav a {
+  padding: .125rem .25rem;
+}
+
+.guide-nav a[aria-current="page"] {
+  color: var(--background);
+  background: var(--accent);
+  text-decoration: none;
+}
+
+.guide-nav:last-child {
+  margin: 2rem 0 0;
+}
+
+@media (max-width: 36rem) {
+  .guide-nav {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+  }
+}
+
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }

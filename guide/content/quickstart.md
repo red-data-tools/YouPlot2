@@ -1,6 +1,9 @@
 ---
 title: Quick Start
+description: Try YouPlot2 with runnable commands and terminal output examples.
 ---
+
+{{< guidenav current="quickstart" >}}
 
 Run these commands in a shell. YouPlot2 draws plots to standard error by default. Plot size can vary with your terminal; the output below omits trailing spaces and the final blank line.
 
@@ -68,3 +71,5 @@ printf 'red\nblue\nred\n' | uplot2 count
 ```
 
 To read a file instead of a pipe, run `uplot2 line values.tsv`.
+
+{{< guidenav current="quickstart" >}}

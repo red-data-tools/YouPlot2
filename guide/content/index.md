@@ -1,6 +1,9 @@
 ---
 title: Plots in your terminal
+description: YouPlot2 draws plots from tabular data. Pipe in values or read a file.
 ---
+
+{{< guidenav current="index" >}}
 
 YouPlot2 draws plots from tabular data. Pipe in values or read a file.
 
@@ -18,4 +21,4 @@ YouPlot2 draws plots from tabular data. Pipe in values or read a file.
    F9 ┤■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 34
       └                                        ┘</pre>
 
-[Quick Start](quickstart.html) · [Installation](installation.html) · [Introduction](introduction.html)
+{{< guidenav current="index" >}}

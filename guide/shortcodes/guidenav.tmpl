@@ -1,0 +1,6 @@
+{# Shared by the top and bottom of each guide page; works without JavaScript. #}
+<div class="guide-nav" role="navigation" aria-label="Guide">
+{% for slug, label in [("index", "Home"), ("quickstart", "Quick Start"), ("installation", "Installation"), ("introduction", "Introduction")] %}
+  <a href="{{ slug }}.html"{% if args.current == slug %} aria-current="page"{% endif %}>{{ label }}</a>
+{% endfor %}
+</div>
