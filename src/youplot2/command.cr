@@ -16,6 +16,7 @@ module YouPlot2
       @progressive_header_consumed = false
       @progressive_row_count = 0
       @progressive_current_input = nil.as(IO?)
+      @progressive_pending_record = ""
     end
 
     def run
@@ -72,6 +73,10 @@ module YouPlot2
       cursor_hidden = true
 
       previous_lines = read_progressive_inputs(input_files, cmd, previous_lines) { !!exit_reason }
+      unless exit_reason
+        previous_lines = process_progressive_record(cmd, previous_lines, final: true)
+        create_plot(cmd) if @data && !progressive_ready?(cmd)
+      end
 
       sanitize_progressive_output(previous_lines, cursor_hidden)
       cursor_hidden = false
@@ -155,19 +160,30 @@ module YouPlot2
 
     private def process_progressive_line(input : String, cmd : String, previous_lines : Int32) : Int32
       output_data(input)
+      @progressive_pending_record += input
+      return previous_lines unless input.ends_with?('\n') || input.ends_with?('\r')
+      process_progressive_record(cmd, previous_lines)
+    end
 
-      row = parse_progressive_row(input)
-      return previous_lines unless row
+    private def process_progressive_record(cmd : String, previous_lines : Int32, *, final : Bool = false) : Int32
+      return previous_lines if @progressive_pending_record.empty?
+      rows = parse_progressive_rows(@progressive_pending_record, final)
+      return previous_lines unless rows
+      @progressive_pending_record = ""
 
-      @data = progressive_update_data(row)
-      return previous_lines unless @data
+      rows.each do |row|
+        next if row.empty? || row.all?(Nil)
+        @data = progressive_update_data(row)
+        next unless @data
+        next unless progressive_ready?(cmd)
 
-      STDERR.puts @data.inspect if options.debug?
+        STDERR.puts @data.inspect if options.debug?
 
-      plot = create_plot(cmd)
-      lines = output_plot_progressive(plot)
-      output_io.print "\e[#{lines}F" if lines > 0
-      lines
+        plot = create_plot(cmd)
+        previous_lines = output_plot_progressive(plot)
+        output_io.print "\e[#{previous_lines}F" if previous_lines > 0
+      end
+      previous_lines
     end
 
     private def sanitize_progressive_output(previous_lines : Int32, cursor_hidden : Bool) : Nil
@@ -181,17 +197,19 @@ module YouPlot2
       output_io.flush
     end
 
-    private def parse_progressive_row(input : String) : Array(String?)?
+    private def parse_progressive_rows(input : String, final : Bool) : Array(Array(String?))?
       rows = CSV.parse(input, separator: options.delimiter)
-      row = rows.first?
-      return unless row
-
-      values = row.map { |value| value.as(String?) }
-      return if values.empty? || values.all?(Nil)
-
-      values
+      rows.map { |row| row.map { |value| value.as(String?) } }
     rescue ex : CSV::Error
+      return nil if !final && (ex.message || "").starts_with?("Unclosed quote")
       raise DataError.new("failed to parse progressive input row: #{ex.message}", cause: ex)
+    end
+
+    private def progressive_ready?(cmd : String) : Bool
+      return true unless options.transpose?
+      return true unless {"scatter", "s", "density", "d", "lines", "lineplots", "ls"}.includes?(cmd)
+      count = @progressive_series.size
+      count >= 2 && (options.fmt != "xyxy" || count.even?)
     end
 
     private def progressive_update_data(row : Array(String?)) : Data?

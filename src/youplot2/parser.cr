@@ -79,8 +79,8 @@ module YouPlot2
       add_help_option(@opt)
       add_version_option(@opt)
 
-      @opt.unknown_args do |args, _|
-        @input_files = args.dup
+      @opt.unknown_args do |before_dash, after_dash|
+        @input_files = before_dash + after_dash
       end
     end
 

@@ -1,6 +1,14 @@
 require "./spec_helper"
 
 describe YouPlot2::Parser do
+  it "keeps input paths on both sides of --" do
+    params = YouPlot2::Parameters.new
+    options = YouPlot2::Options.new
+    parser = YouPlot2::Parser.new(["line", "first.tsv", "--", "second.tsv"], params, options)
+    parser.parse
+    parser.input_files.should eq(["first.tsv", "second.tsv"])
+  end
+
   it "parses common and subcommand options after command" do
     argv = [
       "line",

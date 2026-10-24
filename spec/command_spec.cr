@@ -7,6 +7,92 @@ def temp_command_path(prefix : String) : String
 end
 
 describe YouPlot2::Command do
+  it "reads a one-row transposed input with headers as one series" do
+    data = YouPlot2::DSV.parse("sample\t1\t2\n", '\t', true, true)
+    data.headers.should eq(["sample"])
+    data.series.should eq([["1", "2"]])
+  end
+
+  it "uses all input files around --" do
+    first_path = temp_command_path("before-dash")
+    second_path = temp_command_path("after-dash")
+    begin
+      File.write(first_path, "1\t2\n")
+      File.write(second_path, "3\t4\n")
+      command = YouPlot2::Command.new(["line", first_path, "--", second_path])
+      command.options.output = IO::Memory.new
+      command.run
+      command.data.not_nil!.series[0].size.should eq(2)
+    ensure
+      File.delete(first_path) if File.exists?(first_path)
+      File.delete(second_path) if File.exists?(second_path)
+    end
+  end
+
+  it "waits for transposed xy series before progressive plotting" do
+    path = temp_command_path("progressive-xy")
+    begin
+      File.write(path, "1\t2\n3\t4\n")
+      ["scatter", "lines", "density"].each do |kind|
+        command = YouPlot2::Command.new([kind, "-T", "-p", path])
+        command.options.output = IO::Memory.new
+        command.run
+        command.data.not_nil!.series.size.should eq(2)
+      end
+    ensure
+      File.delete(path) if File.exists?(path)
+    end
+  end
+
+  it "waits for complete xyxy pairs and rejects an unmatched final series" do
+    path = temp_command_path("progressive-xyxy")
+    begin
+      File.write(path, "1\t2\n3\t4\n5\t6\n7\t8\n")
+      complete = YouPlot2::Command.new(["scatter", "-T", "-p", "--fmt", "xyxy", path])
+      complete.options.output = IO::Memory.new
+      complete.run
+      complete.data.not_nil!.series.size.should eq(4)
+
+      File.write(path, "1\t2\n3\t4\n5\t6\n")
+      incomplete = YouPlot2::Command.new(["scatter", "-T", "-p", "--fmt", "xyxy", path])
+      incomplete.options.output = IO::Memory.new
+      expect_raises(YouPlot2::DataError, /even number/) { incomplete.run }
+    ensure
+      File.delete(path) if File.exists?(path)
+    end
+  end
+
+  it "waits for a complete quoted CSV record in progressive mode" do
+    first_path = temp_command_path("csv-part-1")
+    second_path = temp_command_path("csv-part-2")
+    pass_path = temp_command_path("csv-pass")
+    begin
+      File.write(first_path, "\"alpha\n")
+      File.write(second_path, "beta\",1\n")
+      command = YouPlot2::Command.new(["bar", "-p", "-d,", "--pass", pass_path, first_path, second_path])
+      command.options.output = IO::Memory.new
+      command.run
+      command.data.not_nil!.series[0].should eq(["alpha\nbeta"])
+      File.read(pass_path).should eq("\"alpha\nbeta\",1\n")
+    ensure
+      [first_path, second_path, pass_path].each do |path|
+        File.delete(path) if File.exists?(path)
+      end
+    end
+  end
+
+  it "reports an unfinished quoted record at EOF" do
+    path = temp_command_path("csv-unfinished")
+    begin
+      File.write(path, "\"alpha\nbeta")
+      command = YouPlot2::Command.new(["bar", "-p", "-d,", path])
+      command.options.output = IO::Memory.new
+      expect_raises(YouPlot2::DataError, /Unclosed quote/) { command.run }
+    ensure
+      File.delete(path) if File.exists?(path)
+    end
+  end
+
   it "treats multiple input files as one data stream" do
     input1_path = temp_command_path("multi-input-1")
     input2_path = temp_command_path("multi-input-2")

@@ -49,7 +49,7 @@ module YouPlot2
       end
 
       # headers present but no data rows
-      return Array(Array(String?)).new(rows[0].size) { [] of String? } if rows.size == 1
+      return Array(Array(String?)).new(rows[0].size) { [] of String? } if rows.size == 1 && !transpose
 
       if transpose
         rows.map { |row| row[1..].map { |v| v.as(String?) } }
