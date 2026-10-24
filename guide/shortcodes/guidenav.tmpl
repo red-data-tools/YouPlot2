@@ -2,7 +2,8 @@
 {# Modules execute once per page even though this navigation appears twice. #}
 <script type="module" src="js/copy.js"></script>
 <div class="guide-nav" role="navigation" aria-label="Guide">
-{% for slug, label in [("index", "Home"), ("quickstart", "Quick Start"), ("installation", "Installation"), ("introduction", "Introduction")] %}
+{% for slug, label in [("index", "Home"), ("quickstart", "Quick Start"), ("installation", "Installation")] %}
   <a href="{{ slug }}.html"{% if args.current == slug %} aria-current="page"{% endif %}>{{ label }}</a>
 {% endfor %}
+  <a href="https://github.com/red-data-tools/YouPlot2">GitHub</a>
 </div>

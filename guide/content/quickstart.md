@@ -73,6 +73,6 @@ printf '1\n3\n2\n4\n3\n' | uplot2 hist
 printf 'red\nblue\nred\n' | uplot2 count
 ```
 
-To read a file instead of a pipe, run `uplot2 line values.tsv`.
+To read a file instead of a pipe, run `uplot2 line values.tsv`. Run `uplot2 --help` for all commands, or `uplot2 <command> --help` for command options.
 
 {{< guidenav current="quickstart" >}}
