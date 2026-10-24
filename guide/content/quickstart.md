@@ -9,10 +9,13 @@ Run these commands in a shell. YouPlot2 draws plots to standard error by default
 
 ## Fibonacci growth
 
-Each tab-separated row contains a label and a value:
+`printf` turns each pair of numbers into a label and a value, separated by a tab:
 
 ```sh
-printf 'F1\t1\nF2\t1\nF3\t2\nF4\t3\nF5\t5\nF6\t8\nF7\t13\nF8\t21\nF9\t34\n' | uplot2 bar
+printf 'F%s\t%s\n' \
+  1 1  2 1  3 2 \
+  4 3  5 5  6 8 \
+  7 13 8 21 9 34 | uplot2 bar
 ```
 
 Output:
