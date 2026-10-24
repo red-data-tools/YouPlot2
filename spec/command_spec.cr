@@ -69,4 +69,47 @@ describe YouPlot2::Command do
       File.delete(expected_output_path) if File.exists?(expected_output_path)
     end
   end
+
+  it "rejects progressive pass targets that alias any input before truncating them" do
+    first_path = temp_command_path("progressive-first")
+    input_path = temp_command_path("progressive-input")
+    symlink_path = temp_command_path("progressive-symlink")
+    hardlink_path = temp_command_path("progressive-hardlink")
+    original = "1\t#{" " * 5_000}2\n" * 20
+
+    begin
+      File.write(first_path, SIMPLE_INPUT)
+      File.write(input_path, original)
+      File.symlink(input_path, symlink_path)
+      File.link(input_path, hardlink_path)
+
+      [input_path, symlink_path, hardlink_path].each do |pass_path|
+        command = YouPlot2::Command.new(["line", "-p", "--pass", pass_path, first_path, input_path])
+        command.options.output = IO::Memory.new
+        ex = expect_raises(YouPlot2::UsageError) { command.run }
+        (ex.message || "").should contain("progressive input file")
+        File.read(input_path).should eq(original)
+        File.read(first_path).should eq(SIMPLE_INPUT)
+      end
+    ensure
+      [first_path, input_path, symlink_path, hardlink_path].each do |path|
+        File.delete(path) if File.exists?(path)
+      end
+    end
+  end
+
+  it "reports a buffered output failure instead of reporting success" do
+    if File.exists?("/dev/full")
+      input_path = temp_command_path("full-input")
+      begin
+        File.write(input_path, SIMPLE_INPUT)
+        stderr = IO::Memory.new
+        status = YouPlot2.run(["line", "--output", "/dev/full", input_path], stderr: stderr)
+        status.should eq(1)
+        stderr.to_s.should contain("I/O error")
+      ensure
+        File.delete(input_path) if File.exists?(input_path)
+      end
+    end
+  end
 end

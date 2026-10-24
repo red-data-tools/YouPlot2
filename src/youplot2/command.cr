@@ -19,6 +19,7 @@ module YouPlot2
     end
 
     def run
+      completed = false
       parser = Parser.new(@argv, @params, @options)
       parser.parse
 
@@ -28,26 +29,18 @@ module YouPlot2
 
       if cmd.nil?
         parser.show_main_help(STDERR)
-        return
-      end
-
-      # colors subcommand – no input data needed
-      if ["colors", "color", "colours", "colour"].includes?(cmd)
+      elsif ["colors", "color", "colours", "colour"].includes?(cmd)
         output_colors
-        return
-      end
-
-      if options.progressive?
+      elsif options.progressive?
         process_progressive_input(input_files, cmd)
-        return
+      else
+        # Multiple files are treated as one continuous stream for a single plot.
+        input = read_all_input(input_files)
+        process_input(input, cmd)
       end
-
-      # Read from files given on the command line, or from stdin.
-      # Multiple files are treated as one continuous stream for a single plot.
-      input = read_all_input(input_files)
-      process_input(input, cmd)
+      completed = true
     ensure
-      finalize_streams
+      finalize_streams(suppress_errors: !completed)
     end
 
     private def process_input(input : String, cmd : String)
@@ -67,6 +60,7 @@ module YouPlot2
       if options.output_path
         raise UsageError.new("progressive mode cannot write plots to --output FILE")
       end
+      reject_progressive_input_overwrite(input_files)
 
       exit_reason = nil.as(Process::ExitReason?)
       Process.on_terminate do |reason|
@@ -88,6 +82,20 @@ module YouPlot2
       sanitize_progressive_output(previous_lines || 0, cursor_hidden) if cursor_hidden
       @progressive_current_input = nil
       Process.restore_interrupts!
+    end
+
+    private def reject_progressive_input_overwrite(input_files : Array(String)) : Nil
+      pass_path = options.pass_path
+      return unless pass_path && File.exists?(pass_path)
+
+      pass_info = File.info(pass_path)
+      input_files.each do |input_path|
+        if pass_info.same_file?(File.info(input_path))
+          raise UsageError.new("--pass FILE must not refer to a progressive input file: #{input_path.inspect}")
+        end
+      end
+    rescue ex : File::Error
+      raise InputError.new("failed to inspect progressive input or --pass FILE: #{ex.message}", cause: ex)
     end
 
     private def read_progressive_inputs(input_files : Array(String), cmd : String,
@@ -362,20 +370,28 @@ module YouPlot2
       raise InputError.new("failed to open #{path.inspect} from #{option}: #{ex.message}", cause: ex)
     end
 
-    private def finalize_streams
-      finalize_io(options.output)
+    private def finalize_streams(*, suppress_errors : Bool) : Nil
+      first_error = nil.as(Exception?)
+      streams = [options.output] of IO
       if io = options.pass
-        finalize_io(io)
+        streams << io unless streams.any? { |stream| stream.object_id == io.object_id }
       end
-    end
-
-    private def finalize_io(io : IO)
-      io.flush
-      return if io.object_id == STDOUT.object_id
-      return if io.object_id == STDERR.object_id
-      io.close unless io.closed?
-    rescue
-      # Ignore close/flush errors during teardown.
+      streams.each do |io|
+        begin
+          io.flush
+        rescue ex
+          first_error ||= ex
+        ensure
+          unless io.object_id == STDOUT.object_id || io.object_id == STDERR.object_id || io.closed?
+            begin
+              io.close
+            rescue ex
+              first_error ||= ex
+            end
+          end
+        end
+      end
+      raise first_error.not_nil! if first_error && !suppress_errors
     end
   end
 end
