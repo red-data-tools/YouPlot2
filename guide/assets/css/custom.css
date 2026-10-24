@@ -115,6 +115,8 @@ pre.terminal-output {
 .install-tabs input {
   position: absolute;
   opacity: 0;
+  /* Labels handle clicks; keep hidden inputs available for keyboard focus. */
+  pointer-events: none;
 }
 
 .install-tabs label {
