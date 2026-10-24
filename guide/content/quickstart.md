@@ -2,23 +2,73 @@
 title: Quick Start
 ---
 
-Pipe one value per line to draw a horizontal bar chart:
+Run these commands in a shell. YouPlot2 draws plots to standard error by default. Plot size can vary with your terminal; the output below omits trailing spaces and the final blank line.
+
+## Fibonacci growth
+
+Each tab-separated row contains a label and a value:
 
 ```sh
-printf '1\n3\n2\n' | uplot2 bar
+printf 'F1\t1\nF2\t1\nF3\t2\nF4\t3\nF5\t5\nF6\t8\nF7\t13\nF8\t21\nF9\t34\n' | uplot2 bar
 ```
 
-For named bars, put a label and a value on each tab-separated row:
+Output:
+
+```text
+      ┌                                        ┐
+   F1 ┤■ 1
+   F2 ┤■ 1
+   F3 ┤■■ 2
+   F4 ┤■■■ 3
+   F5 ┤■■■■■ 5
+   F6 ┤■■■■■■■■ 8
+   F7 ┤■■■■■■■■■■■■■■ 13
+   F8 ┤■■■■■■■■■■■■■■■■■■■■■■ 21
+   F9 ┤■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 34
+      └                                        ┘
+```
+
+## Sine wave
+
+Python 3 generates two columns of sample data, which `line` plots as x and y values:
 
 ```sh
-printf 'Mon\t2\nTue\t4\nWed\t3\n' | uplot2 bar
+python3 - <<'PY' | uplot2 line
+from math import pi, sin
+for i in range(33):
+    x = 2 * pi * i / 32
+    print(f'{x:.4f}\t{sin(x):.4f}')
+PY
 ```
 
-The same one-column input can make a line chart or a histogram:
+Output:
+
+```text
+      ┌────────────────────────────────────────┐
+    1 │⠀⠀⠀⠀⠀⠀⡠⠊⠉⠉⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+      │⠀⠀⠀⠀⢀⠖⠁⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+      │⠀⠀⠀⢀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+      │⠀⠀⢀⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+      │⠀⠀⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+      │⠀⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+      │⢰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+      │⠧⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠼⡤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⢤⠤⠤⠤⠤│
+      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀│
+      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡎⠀⠀⠀⠀⠀│
+      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜⠀⠀⠀⠀⠀⠀│
+      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡸⠀⠀⠀⠀⠀⠀⠀│
+      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⡰⠁⠀⠀⠀⠀⠀⠀⠀│
+      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢦⠀⠀⠀⠀⠀⢀⠜⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+   -1 │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⣀⣀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+      └────────────────────────────────────────┘
+      ⠀0⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀7⠀
+```
+
+You can also make a histogram or count repeated labels:
 
 ```sh
-printf '1\n3\n2\n' | uplot2 line
-printf '1\n3\n2\n' | uplot2 hist
+printf '1\n3\n2\n4\n3\n' | uplot2 hist
+printf 'red\nblue\nred\n' | uplot2 count
 ```
 
-You can also read a file, for example `uplot2 line values.tsv`. Add `--output -` to write the plot to standard output instead of standard error.
+To read a file instead of a pipe, run `uplot2 line values.tsv`.
