@@ -1,5 +1,6 @@
 /* Unmodified JuliaMono v0.062; license: ../fonts/OFL.txt.
    Source: https://github.com/cormullion/juliamono/tree/v0.062/webfonts */
+/* Site styling adapts Terminal by panr; MIT license: ../licenses/terminal.txt. */
 @font-face {
   font-family: "JuliaMono";
   src: url("../fonts/JuliaMono-Regular.woff2") format("woff2");
@@ -28,26 +29,27 @@ body, button, input, textarea, select, pre, code, kbd {
   font-variant-ligatures: none;
 }
 
-.header__logo::after, .post-title::after,
-.content > .post > .post-title {
+/* Terminal emphasis uses color, weight and reverse video, at one text size. */
+body, body * {
+  font-size: 1rem !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--accent);
+}
+
+.post-title::after, .content > .post > .post-title,
+.post-meta, .footer .copyright > span + span {
   display: none;
 }
 
-.logo {
-  padding: 0;
-  color: var(--accent);
-  background: none;
-}
-
-.header, .footer {
-  border-color: var(--code-border);
-  border-style: solid;
-  border-width: 0 0 1px;
+.footer {
+  border-top: 1px solid var(--code-border);
   padding: 1rem 0;
 }
 
-.footer {
-  border-width: 1px 0 0;
+.footer .copyright {
+  justify-content: flex-start;
 }
 
 .content > .post-title {
@@ -57,6 +59,14 @@ body, button, input, textarea, select, pre, code, kbd {
 }
 
 .post-content {
+  margin-top: 0;
+}
+
+.post {
+  padding: 1rem 0;
+}
+
+.post-content > :first-child {
   margin-top: 0;
 }
 
