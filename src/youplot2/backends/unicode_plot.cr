@@ -147,6 +147,7 @@ module YouPlot2
           labels: params.labels != false,
           xlim: params.xlim || {0.0, 0.0},
           width: params.width,
+          color: resolve_color(params.color, :green),
         )
       end
 
@@ -154,36 +155,13 @@ module YouPlot2
       # colors
       # -----------------------------------------------------------------------
       def colors(color_names : Bool = false) : String
-        style_colors = [
-          {"\e[30m", "black"},
-          {"\e[31m", "red"},
-          {"\e[32m", "green"},
-          {"\e[33m", "yellow"},
-          {"\e[34m", "blue"},
-          {"\e[35m", "magenta"},
-          {"\e[36m", "cyan"},
-          {"\e[37m", "white"},
-          {"\e[90m", "gray"},
-          {"\e[90m", "light_black"},
-          {"\e[91m", "light_red"},
-          {"\e[92m", "light_green"},
-          {"\e[93m", "light_yellow"},
-          {"\e[94m", "light_blue"},
-          {"\e[95m", "light_magenta"},
-          {"\e[96m", "light_cyan"},
-          {"\e[0m", "normal"},
-          {"\e[39m", "default"},
-          {"\e[1m", "bold"},
-          {"\e[4m", "underline"},
-          {"\e[5m", "blink"},
-          {"\e[7m", "reverse"},
-          {"\e[8m", "hidden"},
-          {"", "nothing"},
-        ]
+        names = ::UnicodePlot::NAMED_COLORS.keys.map(&.to_s) +
+                ["gray", "light_black", "auto", "normal", "default", "nothing"]
 
         String.build do |io|
-          style_colors.each do |(seq, name)|
-            io << seq << name
+          names.each do |name|
+            color = ::UnicodePlot.ansi_color(to_color_sym(name, :green))
+            io << ::UnicodePlot.ansi_fg_escape(color) << name
             io << "\t  ●" unless color_names
             io << "\e[0m\t"
           end
@@ -332,7 +310,17 @@ module YouPlot2
       private def resolve_color(color : (String | UInt32)?, default : Symbol) : Symbol | UInt32
         case c = color
         when UInt32 then c
-        when String then to_color_sym(c, default)
+        when String
+          if c.matches?(/\A[0-9]+\z/)
+            ::UnicodePlot.ansi_color(c.to_i32)
+          elsif c.matches?(/\A#[0-9a-fA-F]{6}\z/)
+            r = c[1, 2].to_i(16)
+            g = c[3, 2].to_i(16)
+            b = c[5, 2].to_i(16)
+            ::UnicodePlot.ansi_color(r, g, b)
+          else
+            to_color_sym(c, default)
+          end
         else             default
         end
       end
@@ -343,7 +331,8 @@ module YouPlot2
 
       private def to_color_sym(s : String, default : Symbol) : Symbol
         return :auto if s == "auto"
-        return :normal if s == "normal"
+        return :normal if {"normal", "default", "nothing"}.includes?(s)
+        return :dark_gray if {"gray", "light_black"}.includes?(s)
         if color = ::UnicodePlot::NAMED_COLORS.keys.find { |name| name.to_s == s }
           return color
         end

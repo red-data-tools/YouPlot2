@@ -20,6 +20,19 @@ describe YouPlot2::Aggregation do
       counts.should eq(["1", "1", "1"] of String?)
     end
 
+    it "orders large integers and decimal labels without Float64 rounding" do
+      labels, counts = YouPlot2::Aggregation.count_values([
+        "9007199254740993", "9007199254740992", "2.0000000000000001",
+        "2", "-9007199254740993", "-9007199254740992",
+      ])
+
+      labels.should eq([
+        "-9007199254740993", "-9007199254740992", "2",
+        "2.0000000000000001", "9007199254740992", "9007199254740993",
+      ] of String?)
+      counts.should eq(["1", "1", "1", "1", "1", "1"] of String?)
+    end
+
     it "supports reverse option after natural sorting" do
       labels, _ = YouPlot2::Aggregation.count_values([
         "a10", "a2", "a1",

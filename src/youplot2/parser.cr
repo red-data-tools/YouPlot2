@@ -140,7 +140,7 @@ module YouPlot2
         @params.padding = parse_int_option("--padding", v, min: 0)
       end
 
-      opt.on("-c", "--color VAL", "drawing color") do |v|
+      opt.on("-c", "--color VAL", "color name, palette index 0..255, or #RRGGBB") do |v|
         @params.color = parse_color(v)
       end
 
@@ -407,9 +407,15 @@ module YouPlot2
     end
 
     private def parse_color(value : String) : String | UInt32
-      value.matches?(/\A[0-9]+\z/) ? value.to_u32 : value
-    rescue ex : ArgumentError
-      raise UsageError.new("--color must be a color name or a 32-bit color number, got #{value.inspect}", cause: ex)
+      if value.matches?(/\A[0-9]+\z/)
+        index = value.to_i?
+        unless index && 0 <= index <= 255
+          raise UsageError.new("--color palette index must be 0..255, got #{value.inspect}")
+        end
+      elsif value.starts_with?('#') && !value.matches?(/\A#[0-9a-fA-F]{6}\z/)
+        raise UsageError.new("--color RGB value must be #RRGGBB, got #{value.inspect}")
+      end
+      value
     end
   end
 end

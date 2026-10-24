@@ -1,6 +1,23 @@
 require "./spec_helper"
 
 describe YouPlot2::Parser do
+  it "keeps palette indices and RGB colors as distinct CLI values" do
+    {"0", "255", "#12aBcD", "light_white"}.each do |color|
+      params = YouPlot2::Parameters.new
+      YouPlot2::Parser.new(["bar", "--color", color], params, YouPlot2::Options.new).parse
+      params.color.should eq(color)
+    end
+  end
+
+  it "rejects out-of-range palette indices and malformed RGB colors" do
+    {"256", "999999999999999999999999", "#f00", "#12345g"}.each do |color|
+      expect_raises(YouPlot2::UsageError, /--color/) do
+        YouPlot2::Parser.new(["bar", "--color", color],
+          YouPlot2::Parameters.new, YouPlot2::Options.new).parse
+      end
+    end
+  end
+
   it "keeps input paths on both sides of --" do
     params = YouPlot2::Parameters.new
     options = YouPlot2::Options.new

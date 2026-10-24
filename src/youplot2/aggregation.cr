@@ -31,7 +31,7 @@ module YouPlot2
 
       # Fast path: pure numeric labels.
       if a_kind == :numeric && b_kind == :numeric
-        r = compare_f64(a.to_f64, b.to_f64)
+        r = compare_decimal_strings(a, b)
         return r == 0 ? compare_strings(a, b) : r
       end
 
@@ -70,12 +70,34 @@ module YouPlot2
       end
     end
 
-    private def compare_f64(a : Float64, b : Float64) : Int32
-      if r = a <=> b
-        r
-      else
-        0
+    private def compare_decimal_strings(a : String, b : String) : Int32
+      a_negative, a_integer, a_fraction = decimal_parts(a)
+      b_negative, b_integer, b_fraction = decimal_parts(b)
+      return a_negative ? -1 : 1 if a_negative != b_negative
+
+      result = a_integer.size <=> b_integer.size
+      result = compare_strings(a_integer, b_integer) if result == 0
+      if result == 0
+        max_digits = Math.max(a_fraction.size, b_fraction.size)
+        (0...max_digits).each do |i|
+          a_digit = a_fraction[i]? || '0'
+          b_digit = b_fraction[i]? || '0'
+          result = a_digit.ord <=> b_digit.ord
+          break unless result == 0
+        end
       end
+      a_negative ? -result : result
+    end
+
+    private def decimal_parts(value : String) : {Bool, String, String}
+      negative = value.starts_with?('-')
+      unsigned = value.starts_with?('+') || negative ? value[1..] : value
+      parts = unsigned.split('.', 2)
+      integer = parts[0].sub(/\A0+/, "")
+      integer = "0" if integer.empty?
+      fraction = (parts[1]? || "").sub(/0+\z/, "")
+      negative = false if integer == "0" && fraction.empty?
+      {negative, integer, fraction}
     end
 
     private def classify_label(s : String) : Symbol
