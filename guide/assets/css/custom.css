@@ -20,6 +20,9 @@ html {
   --background: #0d1410;
   --foreground: #dce8dc;
   --accent: #a8e5a1;
+  --plot-green: #26a269;
+  --plot-bright-green: #33d17a;
+  --plot-gray: #8b968c;
 }
 
 [data-theme="light"] {
@@ -27,6 +30,9 @@ html {
   --background: #f1f5ef;
   --foreground: #1b3022;
   --accent: #205c34;
+  --plot-green: #137333;
+  --plot-bright-green: #15803d;
+  --plot-gray: #657065;
 }
 
 /* Override the theme's separate code font so text and plot glyphs agree. */
@@ -83,6 +89,25 @@ pre.terminal-output {
   letter-spacing: 0;
   white-space: pre;
   word-break: normal;
+}
+
+/* ANSI palette entries from the CLI output, adapted to each page background. */
+.ansi-2 { color: var(--plot-green); }
+.ansi-8 { color: var(--plot-gray); }
+.ansi-10 { color: var(--plot-bright-green); }
+
+.command-block { position: relative; }
+.command-block > pre { padding-top: 3.5rem; }
+.command-copy {
+  position: absolute;
+  z-index: 1;
+  top: .5rem;
+  right: .5rem;
+  margin: 0;
+  padding: .125rem .5rem;
+  color: var(--accent);
+  background: var(--background);
+  border: 1px solid var(--code-border);
 }
 
 .guide-nav {

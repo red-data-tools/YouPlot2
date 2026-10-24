@@ -5,7 +5,7 @@ description: Try YouPlot2 with runnable commands and terminal output examples.
 
 {{< guidenav current="quickstart" >}}
 
-Run these commands in a shell. YouPlot2 draws plots to standard error by default. Plot size can vary with your terminal; the output below omits trailing spaces and the final blank line.
+Run these commands in a shell. YouPlot2 draws plots to standard error by default. Plot size and colors can vary with your terminal; the output below omits trailing spaces and the final blank line.
 
 ## Fibonacci growth
 
@@ -20,17 +20,17 @@ printf 'F%s\t%s\n' \
 
 Output:
 
-<pre class="terminal-output">      ┌                                        ┐
-   F1 ┤■ 1
-   F2 ┤■ 1
-   F3 ┤■■ 2
-   F4 ┤■■■ 3
-   F5 ┤■■■■■ 5
-   F6 ┤■■■■■■■■ 8
-   F7 ┤■■■■■■■■■■■■■■ 13
-   F8 ┤■■■■■■■■■■■■■■■■■■■■■■ 21
-   F9 ┤■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ 34
-      └                                        ┘</pre>
+<pre class="terminal-output">      <span class="ansi-8">┌                                        ┐</span>
+   F1 <span class="ansi-8">┤</span><span class="ansi-2">■ </span>1
+   F2 <span class="ansi-8">┤</span><span class="ansi-2">■ </span>1
+   F3 <span class="ansi-8">┤</span><span class="ansi-2">■■ </span>2
+   F4 <span class="ansi-8">┤</span><span class="ansi-2">■■■ </span>3
+   F5 <span class="ansi-8">┤</span><span class="ansi-2">■■■■■ </span>5
+   F6 <span class="ansi-8">┤</span><span class="ansi-2">■■■■■■■■ </span>8
+   F7 <span class="ansi-8">┤</span><span class="ansi-2">■■■■■■■■■■■■■■ </span>13
+   F8 <span class="ansi-8">┤</span><span class="ansi-2">■■■■■■■■■■■■■■■■■■■■■■ </span>21
+   F9 <span class="ansi-8">┤</span><span class="ansi-2">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span>34
+      <span class="ansi-8">└                                        ┘</span></pre>
 
 ## Sine wave
 
@@ -47,24 +47,24 @@ PY
 
 Output:
 
-<pre class="terminal-output">      ┌────────────────────────────────────────┐
-    1 │⠀⠀⠀⠀⠀⠀⡠⠊⠉⠉⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-      │⠀⠀⠀⠀⢀⠖⠁⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-      │⠀⠀⠀⢀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-      │⠀⠀⢀⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-      │⠀⠀⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-      │⠀⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-      │⢰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-      │⠧⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠼⡤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⢤⠤⠤⠤⠤│
-      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀│
-      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡎⠀⠀⠀⠀⠀│
-      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜⠀⠀⠀⠀⠀⠀│
-      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡸⠀⠀⠀⠀⠀⠀⠀│
-      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⡰⠁⠀⠀⠀⠀⠀⠀⠀│
-      │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢦⠀⠀⠀⠀⠀⢀⠜⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-   -1 │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⣀⣀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
-      └────────────────────────────────────────┘
-      ⠀0⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀7⠀</pre>
+<pre class="terminal-output">      <span class="ansi-8">┌────────────────────────────────────────┐</span>
+    <span class="ansi-8">1 │⠀⠀⠀⠀⠀⠀</span><span class="ansi-2">⡠⠊⠉⠉⠑⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀⠀⠀⠀</span><span class="ansi-2">⢀⠖⠁⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀⠀⠀</span><span class="ansi-2">⢀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀⠀</span><span class="ansi-2">⢀⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀⠀</span><span class="ansi-2">⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀</span><span class="ansi-2">⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│</span><span class="ansi-2">⢰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│</span><span class="ansi-10">⠧</span><span class="ansi-8">⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</span><span class="ansi-10">⠼⡤</span><span class="ansi-8">⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤</span><span class="ansi-10">⢤</span><span class="ansi-8">⠤⠤⠤⠤│</span>
+      <span class="ansi-8">│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-2">⢱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-2">⢣⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡎⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-2">⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡜⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-2">⠈⢆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡸⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-2">⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⡰⠁⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">│⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-2">⠈⢦⠀⠀⠀⠀⠀⢀⠜⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+   <span class="ansi-8">-1 │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-2">⠑⢄⣀⣀⡠⠊⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</span><span class="ansi-8">│</span>
+      <span class="ansi-8">└────────────────────────────────────────┘</span>
+      ⠀<span class="ansi-8">0⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀7⠀</span></pre>
 
 You can also make a histogram or count repeated labels:
 

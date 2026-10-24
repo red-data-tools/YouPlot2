@@ -1,4 +1,6 @@
 {# Shared by the top and bottom of each guide page; works without JavaScript. #}
+{# Modules execute once per page even though this navigation appears twice. #}
+<script type="module" src="js/copy.js"></script>
 <div class="guide-nav" role="navigation" aria-label="Guide">
 {% for slug, label in [("index", "Home"), ("quickstart", "Quick Start"), ("installation", "Installation"), ("introduction", "Introduction")] %}
   <a href="{{ slug }}.html"{% if args.current == slug %} aria-current="page"{% endif %}>{{ label }}</a>
