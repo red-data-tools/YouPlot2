@@ -13,7 +13,6 @@ galleries: "galleries/"
 theme: "terminal"
 color_scheme: "default"
 theme_params:
-  accent_color: "lime"
   center_theme: true
 
 features:
