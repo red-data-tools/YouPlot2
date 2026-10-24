@@ -2,8 +2,8 @@
 title: Welcome
 ---
 
-YouPlot2 is a command-line tool that turns tabular data into plots displayed in your terminal.
+YouPlot2 draws plots from tabular data in your terminal. It reads from a file or standard input and supports bar charts, histograms, line charts, scatter plots, density plots, and box plots.
 
-- [Introduction](introduction.html)
-- [Installation](installation.html)
-- [Quick Start](quickstart.html)
+- [Introduction](introduction.html): input and commands
+- [Installation](installation.html): download or build the executable
+- [Quick Start](quickstart.html): try a few plots
