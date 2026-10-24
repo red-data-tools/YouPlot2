@@ -1,170 +1,70 @@
+/* Unmodified JuliaMono v0.062; license: ../fonts/OFL.txt.
+   Source: https://github.com/cormullion/juliamono/tree/v0.062/webfonts */
 @font-face {
-  font-family: "JuliaMono Plot";
+  font-family: "JuliaMono";
   src: url("../fonts/JuliaMono-Regular.woff2") format("woff2");
-  font-style: normal;
   font-weight: 400;
+  font-style: normal;
   font-display: block;
 }
 
 [data-theme="dark"] {
+  color-scheme: dark;
   --background: #0d1410;
   --foreground: #dce8dc;
   --accent: #a8e5a1;
-  --terminal-muted: #9bb09e;
-  --terminal-border: #34473a;
 }
 
 [data-theme="light"] {
+  color-scheme: light;
   --background: #f1f5ef;
   --foreground: #1b3022;
   --accent: #205c34;
-  --terminal-muted: #486653;
-  --terminal-border: #adc5ae;
 }
 
-/* One font keeps box drawing, block, and Braille glyphs on the same grid. */
-body,
-button,
-code,
-pre {
-  font-family: "JuliaMono Plot", monospace !important;
+/* Override the theme's separate code font so text and plot glyphs agree. */
+body, button, input, textarea, select, pre, code, kbd {
+  font-family: "JuliaMono", monospace !important;
   font-variant-ligatures: none;
-  font-feature-settings: "liga" 0, "calt" 0;
 }
 
-.container.center {
-  max-width: 900px;
-}
-
-.header {
-  border-bottom: 1px solid var(--terminal-border);
-  padding-bottom: 1rem;
-}
-
-.header__logo::after {
-  display: none;
-}
-
-.logo {
-  background: transparent;
-  color: var(--accent);
-  padding: 0;
-}
-
-.logo::before {
-  content: "> ";
-  color: var(--terminal-muted);
-  white-space: pre;
-}
-
-.content > .post-title {
-  border: 0;
-  padding: 0;
-  margin: 1.5rem 0 0 !important;
-  font-size: 1rem;
-}
-
-.content > .post-title::after,
+.header__logo::after, .post-title::after,
 .content > .post > .post-title {
   display: none;
 }
 
-/* The generated page title supplies the homepage's accessible h1. */
-.content:has(.landing) > .post-title {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px !important;
+.logo {
   padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
+  color: var(--accent);
+  background: none;
 }
 
-.content:has(.landing) > .post {
+.header, .footer {
+  border-color: var(--code-border);
+  border-style: solid;
+  border-width: 0 0 1px;
+  padding: 1rem 0;
+}
+
+.footer {
+  border-width: 1px 0 0;
+}
+
+.content > .post-title {
+  margin: 2rem 0 0 !important;
   padding: 0;
+  border: 0;
 }
 
 .post-content {
   margin-top: 0;
 }
 
-.post-content .highlight code {
-  font-weight: 400;
-}
-
-/* Preserve the actual terminal spacing in plot output. */
-.post-content pre.terminal-output {
-  max-width: 100%;
-  overflow-x: auto;
-  padding: 1rem;
-  border: 1px solid var(--terminal-border);
-  border-radius: 0;
-  background: transparent !important;
-  color: var(--foreground);
-  font-size: 0.9rem !important;
+/* Plain preformatted text avoids syntax highlighting and nested code styles. */
+pre.terminal-output {
   font-weight: 400;
   line-height: 1.2;
   letter-spacing: 0;
   white-space: pre;
   word-break: normal;
-}
-
-.post-content pre.terminal-output code {
-  padding: 0;
-  margin: 0;
-  border: 0;
-  background: transparent !important;
-  color: inherit;
-  font-family: inherit !important;
-  font-size: inherit;
-  font-weight: inherit;
-  letter-spacing: inherit;
-  white-space: inherit;
-}
-
-.landing {
-  padding-top: 2.5rem;
-}
-
-.landing h2 {
-  margin: 0 0 1rem;
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
-  line-height: 1.2;
-}
-
-.landing > p {
-  margin: 0 0 1.75rem;
-}
-
-.terminal-demo {
-  border: 1px solid var(--terminal-border);
-  padding: 1rem;
-}
-
-.terminal-command {
-  margin: 0;
-  overflow-x: auto;
-  white-space: pre;
-  word-break: normal;
-  font-size: 0.9rem;
-}
-
-.terminal-command span {
-  color: var(--accent);
-}
-
-.post-content .terminal-demo pre.terminal-output {
-  margin: 1rem 0 0;
-  padding: 0;
-  border: 0;
-}
-
-.landing-links {
-  margin-top: 1.75rem !important;
-}
-
-.footer {
-  border-top: 1px solid var(--terminal-border);
-  margin-top: 2rem;
 }
