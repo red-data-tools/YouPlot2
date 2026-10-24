@@ -7,7 +7,7 @@ description: Download YouPlot2 or build it from source with Crystal and Shards.
 
 Select your system to install the prebuilt v0.0.6 release. The version shown here is updated when the guide is built. You can also browse [GitHub Releases](https://github.com/red-data-tools/YouPlot2/releases).
 
-Before running these commands, add `$HOME/.local/bin` (or `$HOME\bin` on Windows) to your `PATH` so you can run `uplot2` directly.
+On Windows, add `%LOCALAPPDATA%\Programs\YouPlot2` to `PATH` to run `uplot2` by name.
 
 <div class="install-tabs" role="group" aria-label="Operating system">
 <input type="radio" name="install-os" id="install-linux" checked><label for="install-linux">Linux</label>
@@ -38,10 +38,10 @@ uplot2 --version</pre></div>
 
 <div class="install-panel install-windows"><pre>Invoke-WebRequest 'https://github.com/red-data-tools/YouPlot2/releases/download/v0.0.6/youplot2-v0.0.6-x86_64-pc-windows-msvc.zip' -OutFile 'youplot2-v0.0.6-x86_64-pc-windows-msvc.zip'
 Expand-Archive 'youplot2-v0.0.6-x86_64-pc-windows-msvc.zip' -DestinationPath 'youplot2-v0.0.6-x86_64-pc-windows-msvc' -Force
-New-Item "$HOME\bin" -ItemType Directory -Force | Out-Null
-Copy-Item 'youplot2-v0.0.6-x86_64-pc-windows-msvc\uplot2.exe' "$HOME\bin\uplot2.exe" -Force
+New-Item "$env:LOCALAPPDATA\Programs\YouPlot2" -ItemType Directory -Force | Out-Null
+Copy-Item 'youplot2-v0.0.6-x86_64-pc-windows-msvc\uplot2.exe' "$env:LOCALAPPDATA\Programs\YouPlot2\uplot2.exe" -Force
 Remove-Item 'youplot2-v0.0.6-x86_64-pc-windows-msvc.zip', 'youplot2-v0.0.6-x86_64-pc-windows-msvc' -Recurse
-uplot2 --version</pre></div>
+& "$env:LOCALAPPDATA\Programs\YouPlot2\uplot2.exe" --version</pre></div>
 </div>
 
 To build from source, install Crystal and Shards, then run:
